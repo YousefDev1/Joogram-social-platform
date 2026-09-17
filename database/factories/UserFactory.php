@@ -24,9 +24,13 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $name =  fake()->name();
         return [
-            'name' => fake()->name(),
+            'name' => $name ,
             'email' => fake()->unique()->safeEmail(),
+            'avatar' => 'https://ui-avatars.com/api/?name='.urlencode($name),
+            'username'=> fake()->unique()->userName(),
+            'bio'=> fake()->sentence(10),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

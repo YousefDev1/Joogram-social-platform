@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('username','50')->unique();
             $table->string('avatar');
             $table->string('email')->unique();
+            $table->text('bio');
+            $table->boolean('private_account')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

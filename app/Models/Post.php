@@ -10,6 +10,12 @@ class Post extends Model
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'description',
+        'slug',
+        'image',
+        'user_id'
+    ];
     public function owner()
     {
         return $this->belongsTo(User::class , 'user_id');

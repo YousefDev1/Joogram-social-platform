@@ -31,7 +31,7 @@ class PostFactory extends Factory
         return [
             'description' => fake()->text(),
             'slug'=> Str::slug(fake()->sentence(7)),
-            'image' => fake()->randomElement($images),
+            'image' =>'posts/'. fake()->randomElement($images),
             'user_id' => User::factory(),
         ];
     }

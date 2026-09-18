@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(PostController::class)->group(function(){
         Route::get('posts/create', [PostController::class,'create'])->name('posts.create');
         Route::post('posts/create',[PostController::class,'store'])->name('posts.store');
+        Route::get('posts/{post:slug}' ,[PostController::class,'show'])->name('posts.show');
     });
 });
 

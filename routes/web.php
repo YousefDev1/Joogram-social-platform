@@ -19,9 +19,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::controller(PostController::class)->group(function(){
-        Route::get('posts/create', [PostController::class,'create'])->name('posts.create');
-        Route::post('posts/create',[PostController::class,'store'])->name('posts.store');
-        Route::get('posts/{post:slug}' ,[PostController::class,'show'])->name('posts.show');
+        Route::get('posts/create', 'create')->name('posts.create');
+        Route::post('posts/create','store')->name('posts.store');
+        Route::get('posts/{post:slug}' ,'show')->name('posts.show');
+        Route::get('posts/{post:slug}/edit','edit')->name('posts.edit');
+        Route::put('posts/{post:slug}','update')->name('posts.update');
+        Route::delete('posts/{post:slug}','destroy')->name('posts.destroy');
     });
 
     Route::post('posts/{post:slug}/comment',[CommentController::class,'store'])->name('comment.store');

@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="card p-10">
-        <h1 class="text-3xl mb-10">{{ __('Create a new post') }}</h1>
+        <h1 class="text-3xl mb-10">{{ __('Edit post') }}</h1>
         {{-- errors component --}}
         <div class="flex flex-col justify-center items-center w-full">
             @if($errors->any())
@@ -13,10 +13,17 @@
             </div>
             @endif
         </div>
-        <form action="{{ route('posts.create') }}" method="post" class="w-full" enctype="multipart/form-data">
+        <form action="{{ route('posts.update', $post->slug )}}" method="post" class="w-full" enctype="multipart/form-data">
             @csrf
-            <x-form/>
-            <x-primary-button class="mt-4">{{ __('Create post') }}</x-primary-button>
+            @method('PUT')
+            {{-- :post="$post" ->to pass post to form component --}}
+            <x-form :post="$post"/>
+            <x-primary-button class="mt-4">{{ __('Update post') }}</x-primary-button>
         </form>
+
+
+
+
+
     </div>
 </x-app-layout>

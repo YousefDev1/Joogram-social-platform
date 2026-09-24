@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -55,7 +56,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('posts.edit',compact('post'));
     }
 
     /**
@@ -63,7 +64,18 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $data = $request->validate([
+            'description' => ['required'],
+            'image' => ['nullable','mimes:jpg,jpeg,png,gif']
+        ]);
+
+        if($request->hasFile('image'))
+        {
+            $image = $request->file('image')->store('posts','public');
+            $request['image'] = $image;
+        }
+        $post->update($data);
+        return redirect()->back()->with('success','post updated successfully');
     }
 
     /**
@@ -71,6 +83,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if($post->image){
+            Storage::disk('public')->delete($post->image);
+        }
+        $post->delete();
+        return redirect()->route('welcome');
     }
 }

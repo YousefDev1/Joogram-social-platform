@@ -16,6 +16,16 @@
                             {{ $post->owner->username }}
                         </a>
                     </div>
+                    @if ($post->owner->id === auth()->id())
+                        <a href="{{ route('posts.edit', $post->slug) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <form method="POST" id="delete-form-post-{{ $post->id }}" action="{{ route('posts.destroy', $post->slug) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button class="inline p-2 " type="button" onclick="confirmDelete({{ $post->id }})">
+                                <i class="fa-solid fa-trash inline"></i>
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
             {{-- middle of right side --}}
@@ -55,20 +65,39 @@
             </div>
             <div class="border-t p-5">
                 <form action="{{ route('comment.store', $post) }}" method="POST">
-                @csrf
-                @if($errors->has('body'))
-                <div class="text-red-500 mb-2 text-sm">
-                    {{ $errors->first('body') }}
-                </div>
-                @endif
-                <div class="flex flex-row">
-                    <textarea name="body" id="comment_body" placeholder="{{__('Add a comment ...')}}" required
-                    class="h-7 grow resize-none border-none overflow-hidden bg-0 placeholder-gray-400 outline-0 focus:ring-0"></textarea>
-                <button type="submit" class="lrt:ml-5 rtl:mr-5 border-none bg-white text-blue-500"
-                >{{ __('Comment') }}</button>
-                </div>
+                    @csrf
+                    @if($errors->has('body'))
+                        <div class="text-red-500 mb-2 text-sm">
+                            {{ $errors->first('body') }}
+                        </div>
+                    @endif
+                    <div class="flex flex-row">
+                        <textarea name="body" id="comment_body" placeholder="{{__('Add a comment ...')}}" required
+                            class="h-7 grow resize-none border-none overflow-hidden bg-0 placeholder-gray-400 outline-0 focus:ring-0"></textarea>
+                        <button type="submit"
+                            class="lrt:ml-5 rtl:mr-5 border-none bg-white text-blue-500">{{ __('Comment') }}</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    function confirmDelete(postId) {
+        Swal.fire({
+            title: 'Are You Sure ?',
+            text: 'This Action cannot be undone!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3086d6',
+            confirmButtonText: 'Yes Delete it',
+            deleteButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-post-' + postId).submit();
+            }
+        })
+    }
+</script>

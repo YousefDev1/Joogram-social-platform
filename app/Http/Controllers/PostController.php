@@ -15,7 +15,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+        $suggestedUsers = auth()->user()->suggestedUsers();
+        return view('posts.index',['posts' => $posts , 'suggestedUsers' => $suggestedUsers ]);
     }
 
     /**

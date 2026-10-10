@@ -15,7 +15,7 @@
             <div class="flex flex-row text-sm gap-2">
                 <div class="mr-5">
                     <a href="{{ route('users.profile' , auth()->user()->username) }}">
-                        <img src="{{ Auth::user()->avatar }}" alt="{{ auth()->user()->username }}"
+                        <img src="{{ Str::startsWith(Auth::user()->avatar, ['http://', 'https://']) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar) }}" alt="{{ auth()->user()->username }}"
                             class="border border-gray-300 rounded-full h-12 w-12">
                     </a>
                 </div>
@@ -35,7 +35,7 @@
                         <li class="flex flex-row my-5 text-sm justify-items-center gap-2">
                             <div class="mr-5">
                                 <a href="{{ route('users.profile' , $suggested->username)}}">
-                                    <img src="{{ $suggested->avatar }}" alt=""
+                                    <img src="{{ Str::startsWith($suggested->avatar, ['http://', 'https://']) ? $suggested->avatar : asset('storage/' . $suggested->avatar) }}" alt=""
                                         class="rounded-full h-9 w-9 border border-gray-300">
                                 </a>
                             </div>

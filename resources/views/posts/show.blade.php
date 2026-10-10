@@ -9,7 +9,7 @@
             {{-- top of right side --}}
             <div class="border-b-2">
                 <div class="flex items-center p-5 g-0">
-                    <img src="{{ $post->owner->avatar }}" alt="{{ $post->owner->username }}"
+                    <img src="{{ Str::startsWith($post->owner->avatar, ['http://', 'https://']) ? $post->owner->avatar : asset('storage/' . $post->owner->avatar) }}" alt="{{ $post->owner->username }}"
                         class="mr-5 h-10 w-10 rounded-full">
                     <div class="grow">
                         <a href="" class="font-bold">
@@ -31,7 +31,7 @@
             {{-- middle of right side --}}
             <div class="grow">
                 <div class="flex items-start px-5 py-2 gap-3">
-                    <img src="{{ $post->owner->avatar }}" alt="{{ $post->owner->username }}"
+                    <img src="{{ Str::startsWith($post->owner->avatar, ['http://', 'https://']) ? $post->owner->avatar : asset('storage/' . $post->owner->avatar) }}" alt="{{ $post->owner->username }}"
                         class="ltr:mr-5 rtl:ml-5 h-10 w-10 rounded-full">
                     <div class="flex flex-col">
                         <div>
@@ -48,7 +48,7 @@
                 {{-- comments --}}
                 @foreach ($post->comments as $comment)
                     <div class="flex items-start px-5 py-2 gap-2">
-                        <img src="{{$comment->owner->avatar}}" alt="user image"
+                        <img src="{{ Str::startsWith($comment->owner->avatar, ['http://', 'https://']) ? $comment->owner->avatar : asset('storage/' . $comment->owner->avatar) }}" alt="user image"
                             class="w-10 h-10 rounded-full ltr:mr-5 rtl:mr-5">
                         <div class="flex flex-col">
                             <div>

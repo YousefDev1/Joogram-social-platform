@@ -2,7 +2,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 px-4 mt-8">
         {{-- Profile Avatar --}}
         <div class="md:col-span-1 flex justify-center md:justify-start">
-            <img src="{{ $user->avatar }}" alt="{{ $user->username }}"
+            <img src="{{ Str::startsWith($user->avatar, ['http://', 'https://']) ? $user->avatar : asset('storage/' . $user->avatar) }}" alt="{{ $user->username }}"
                 class="w-24 h-24 md:w-40 md:h-40 rounded-full object-cover border border-neutral-300">
         </div>
         {{-- Profile Information --}}

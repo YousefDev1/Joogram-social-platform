@@ -11,7 +11,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password','username','avatar'])]
+#[Fillable([
+    'name',
+    'email',
+    'password',
+    'username',
+    'avatar',
+    'bio',
+    'private_account'
+])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -28,6 +36,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'private_account' => 'boolean',
         ];
     }
 
@@ -43,21 +52,21 @@ class User extends Authenticatable
 
     public function likes()
     {
-        return $this->belongsToMany(Post::class,'likes');
+        return $this->belongsToMany(Post::class, 'likes');
     }
 
     public function following()
     {
-        return $this->belongsToMany(User::class,'follows','user_id','following_user_id')->withPivot('confirmed');
+        return $this->belongsToMany(User::class, 'follows', 'user_id', 'following_user_id')->withPivot('confirmed');
     }
 
     public function follower()
     {
-        return $this->belongsToMany(User::class,'follows','following_user_id','user_id')->withPivot('confirmed');
+        return $this->belongsToMany(User::class, 'follows', 'following_user_id', 'user_id')->withPivot('confirmed');
     }
 
     public function suggestedUsers()
     {
-        return User::whereNot('id',auth()->id())->get()->shuffle()->take(5);
+        return User::whereNot('id', auth()->id())->get()->shuffle()->take(5);
     }
 }

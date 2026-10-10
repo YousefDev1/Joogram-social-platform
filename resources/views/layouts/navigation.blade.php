@@ -37,7 +37,7 @@
                     <x-slot name="trigger">
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div><img src="{{ auth()->user()->avatar }}" alt="User Avatar" class="w-8 h-8 rounded-full">
+                            <div><img src="{{ Str::startsWith(auth()->user()->avatar, ['http://', 'https://']) ? auth()->user()->avatar : asset('storage/' . auth()->user()->avatar) }}" alt="User Avatar" class="w-8 h-8 rounded-full">
                             </div>
                         </button>
                     </x-slot>

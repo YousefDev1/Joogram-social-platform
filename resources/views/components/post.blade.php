@@ -1,7 +1,7 @@
 <div class="card">
     {{-- post header --}}
     <div class="card-header gap-2">
-        <img src="{{ $post->owner->avatar }}" alt="" class="h-9 w-9 rounded-full">
+        <img src="{{ Str::startsWith($post->owner->avatar, ['http://', 'https://']) ? $post->owner->avatar : asset('storage/' . $post->owner->avatar) }}" alt="" class="h-9 w-9 rounded-full">
         <a href="" class="font-bold">{{ $post->owner->username }}</a>
     </div>
     {{-- post body --}}

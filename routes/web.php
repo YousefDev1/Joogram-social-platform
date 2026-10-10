@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
         Route::put('posts/{post:slug}','update')->name('posts.update');
         Route::delete('posts/{post:slug}','destroy')->name('posts.destroy');
         Route::get('/','index')->name('posts.index');
+        Route::get('/explore','explore')->name('explore');
     });
 
     Route::post('posts/{post:slug}/comment',[CommentController::class,'store'])->name('comment.store');

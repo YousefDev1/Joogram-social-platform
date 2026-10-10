@@ -91,4 +91,12 @@ class PostController extends Controller
         $post->delete();
         return redirect()->route('welcome');
     }
+
+    public function explore()
+    {
+        // filtering the posts (don't get private accounts posts or current account posts)
+        $posts = Post::whereRelation('owner','private_account','=',0)->whereNot('user_id',auth()->id())->simplePaginate(12);
+        return view('posts.explore' ,['posts' => $posts]);
+
+    }
 }

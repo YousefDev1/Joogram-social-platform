@@ -9,16 +9,17 @@
             {{-- top of right side --}}
             <div class="border-b-2">
                 <div class="flex items-center p-5 g-0">
-                    <img src="{{ Str::startsWith($post->owner->avatar, ['http://', 'https://']) ? $post->owner->avatar : asset('storage/' . $post->owner->avatar) }}" alt="{{ $post->owner->username }}"
-                        class="mr-5 h-10 w-10 rounded-full">
+                    <img src="{{ Str::startsWith($post->owner->avatar, ['http://', 'https://']) ? $post->owner->avatar : asset('storage/' . $post->owner->avatar) }}"
+                        alt="{{ $post->owner->username }}" class="mr-5 h-10 w-10 rounded-full">
                     <div class="grow">
-                        <a href="" class="font-bold">
+                        <a href="{{ route('users.profile', $post->owner->username) }}" class="font-bold">
                             {{ $post->owner->username }}
                         </a>
                     </div>
                     @if ($post->owner->id === auth()->id())
                         <a href="{{ route('posts.edit', $post->slug) }}"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <form method="POST" id="delete-form-post-{{ $post->id }}" action="{{ route('posts.destroy', $post->slug) }}">
+                        <form method="POST" id="delete-form-post-{{ $post->id }}"
+                            action="{{ route('posts.destroy', $post->slug) }}">
                             @csrf
                             @method('DELETE')
                             <button class="inline p-2 " type="button" onclick="confirmDelete({{ $post->id }})">
@@ -31,11 +32,11 @@
             {{-- middle of right side --}}
             <div class="grow">
                 <div class="flex items-start px-5 py-2 gap-3">
-                    <img src="{{ Str::startsWith($post->owner->avatar, ['http://', 'https://']) ? $post->owner->avatar : asset('storage/' . $post->owner->avatar) }}" alt="{{ $post->owner->username }}"
-                        class="ltr:mr-5 rtl:ml-5 h-10 w-10 rounded-full">
+                    <img src="{{ Str::startsWith($post->owner->avatar, ['http://', 'https://']) ? $post->owner->avatar : asset('storage/' . $post->owner->avatar) }}"
+                        alt="{{ $post->owner->username }}" class="ltr:mr-5 rtl:ml-5 h-10 w-10 rounded-full">
                     <div class="flex flex-col">
                         <div>
-                            <a href="" class="font-bold">
+                            <a href="{{ route('users.profile', $post->owner->username) }}" class="font-bold">
                                 {{ $post->owner->username }}
                             </a>
                             <span class="inline">{{ $post->description }}</span>
@@ -48,11 +49,11 @@
                 {{-- comments --}}
                 @foreach ($post->comments as $comment)
                     <div class="flex items-start px-5 py-2 gap-2">
-                        <img src="{{ Str::startsWith($comment->owner->avatar, ['http://', 'https://']) ? $comment->owner->avatar : asset('storage/' . $comment->owner->avatar) }}" alt="user image"
-                            class="w-10 h-10 rounded-full ltr:mr-5 rtl:mr-5">
+                        <img src="{{ Str::startsWith($comment->owner->avatar, ['http://', 'https://']) ? $comment->owner->avatar : asset('storage/' . $comment->owner->avatar) }}"
+                            alt="user image" class="w-10 h-10 rounded-full ltr:mr-5 rtl:mr-5">
                         <div class="flex flex-col">
                             <div>
-                                <a href="" class="font-bold mr-2 inline-block">
+                                <a href="{{ route('users.profile', $comment->owner->username) }}" class="font-bold mr-2 inline-block">
                                     {{$comment->owner->username}}</a>
                                 <span class="inline">{{$comment->body}}</span>
                             </div>
@@ -62,6 +63,14 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+            <div class="border-t p-3 flex flex-row">
+                <a href="/posts/{{ $post->slug }}/like">
+                    <i class="fa-solid fa-heart hover:text-gray-400 cursor-pointer mr-3 {{ $post->liked(auth()->user()) ? 'text-red-700' : '' }}"></i>
+                </a>
+                <a onclick="focusOnComment()">
+                    <i class="fa-solid fa-comment hover:text-gray-400 cursor-pointer mr-3"></i>
+                </a>
             </div>
             <div class="border-t p-5">
                 <form action="{{ route('comment.store', $post) }}" method="POST">
@@ -100,4 +109,8 @@
             }
         })
     }
+    function focusOnComment(){
+        let commentBody = document.getElementById('comment_body').focus();
+    }
+    
 </script>

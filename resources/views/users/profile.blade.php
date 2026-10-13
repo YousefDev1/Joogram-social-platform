@@ -10,6 +10,7 @@
             <div class="text-3xl font-semibold mb-2">
                 {{ $user->username }}
             </div>
+            @auth
             @if ($user->id == auth()->id())
                 <div class="flex items-center gap-3">
                     <a href="/profile"
@@ -43,13 +44,18 @@
                     </a>
                 </div>
             @endif
+            @endauth
+
             @guest
-                <div>
-                    <a href="/login" class="w-30 bg-blue-400 text-white px-3 py-1 rounded text-center mt-2">
+                    <div>
+                    <a href="{{ route('follow', $user->username) }}"
+                        class="inline-flex items-center justify-center gap-2 rounded border border-neutral-300 px-4 py-2 text-sm font-semibold transition-colors hover:bg-neutral-50">
                         <i class="fa-solid fa-user-plus"></i>
-                        {{ __('Follow') }}</a>
+                        {{ __('Follow') }}
+                    </a>
                 </div>
             @endguest
+
         </div>
         {{-- User Bio --}}
         <div class="text-md mt-8 px-4 col-span-3 col-start-1 order-3 md:col-start-2 md:order-4 md:mt-0">

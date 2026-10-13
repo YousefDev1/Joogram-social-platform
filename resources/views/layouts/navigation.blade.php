@@ -9,7 +9,6 @@
                         <x-application-logo width="90px" height="auto" />
                     </a>
                 </div>
-
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')">
@@ -17,53 +16,69 @@
                     </x-nav-link>
                 </div>
             </div>
-
+            @guest
+                <div class="hidden md:flex md:items-center md:space-x-2">
+                    <div class="space-x-2 text-[1.6rem] mr-5 leading-5">
+                        <a href="/login" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent 
+                                rounded-md font-semibold text-xs text-white uppercase tracking-widest mr-2">
+                            {{ __('Login') }}
+                        </a>
+                        <a href="/register" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent 
+                                rounded-md font-semibold text-xs text-white uppercase tracking-widest mr-2">
+                            {{ __('Register') }}
+                        </a>
+                    </div>
+                </div>
+            @endguest
+            {{-- add add post here by icon page create post --}}
             <!-- Settings Dropdown -->
             <div class="hidden md:flex md:flex-row space-x-3 items-center justify-center">
-            @auth
-                <a href="{{ route('posts.index') }}" aria-label="Home" title="Home"
-                    class="flex items-center justify-center w-10 h-10 rounded-full transition-colors
-                {{ request()->routeIs('posts.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100' }}">
-                    <i class="fa-solid fa-house text-xl"></i>
-                </a>
-                
-                <a href="{{ route('explore') }}" aria-label="Explore" title="Explore"
-                    class="flex items-center justify-center w-10 h-10 rounded-full transition-colors
-                {{ request()->routeIs('explore') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100' }}">
-                    <i class="fa-solid fa-compass text-xl"></i>
-                </a>
-            @endauth
-                <x-dropdown align="right" width="48" class="mx-3">
-                    <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div><img src="{{ Str::startsWith(auth()->user()->avatar, ['http://', 'https://']) ? auth()->user()->avatar : asset('storage/' . auth()->user()->avatar) }}" alt="User Avatar" class="w-8 h-8 rounded-full">
-                            </div>
-                        </button>
-                    </x-slot>
+                @auth
+                        <a href="{{ route('posts.index') }}" aria-label="Home" title="Home"
+                            class="flex items-center justify-center w-10 h-10 rounded-full transition-colors
+                                    {{ request()->routeIs('posts.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100' }}">
+                            <i class="fa-solid fa-house text-xl"></i>
+                        </a>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('users.profile', auth()->user()->username)">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        <a href="{{ route('explore') }}" aria-label="Explore" title="Explore"
+                            class="flex items-center justify-center w-10 h-10 rounded-full transition-colors
+                                    {{ request()->routeIs('explore') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100' }}">
+                            <i class="fa-solid fa-compass text-xl"></i>
+                        </a>
 
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile Settings') }}
-                        </x-dropdown-link>
+                        <x-dropdown align="right" width="48" class="mx-3">
+                            <x-slot name="trigger">
+                                <button
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                    <div><img
+                                            src="{{ Str::startsWith(auth()->user()->avatar, ['http://', 'https://']) ? auth()->user()->avatar : asset('storage/' . auth()->user()->avatar) }}"
+                                            alt="User Avatar" class="w-8 h-8 rounded-full">
+                                    </div>
+                                </button>
+                            </x-slot>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('users.profile', auth()->user()->username)">
+                                    {{ __('Profile') }}
+                                </x-dropdown-link>
 
-                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
+                                <x-dropdown-link :href="route('profile.edit')">
+                                    {{ __('Profile Settings') }}
+                                </x-dropdown-link>
 
+                                <!-- Authentication -->
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+
+                                    <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
+                                                                this.closest('form').submit();">
+                                        {{ __('Log Out') }}
+                                    </x-dropdown-link>
+                                </form>
+                            </x-slot>
+                        </x-dropdown>
+                    </div>
+                @endauth
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
@@ -87,7 +102,7 @@
                 {{ __('Home') }}
             </x-responsive-nav-link>
         </div>
-
+        @auth
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
@@ -111,5 +126,6 @@
                 </form>
             </div>
         </div>
+        @endauth
     </div>
 </nav>

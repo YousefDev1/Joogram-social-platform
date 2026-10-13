@@ -16,7 +16,7 @@
                             {{ $post->owner->username }}
                         </a>
                     </div>
-                    @if ($post->owner->id === auth()->id())
+                    @can ('update',$post)
                         <a href="{{ route('posts.edit', $post->slug) }}"><i class="fa-solid fa-pen-to-square"></i></a>
                         <form method="POST" id="delete-form-post-{{ $post->id }}"
                             action="{{ route('posts.destroy', $post->slug) }}">
@@ -26,7 +26,10 @@
                                 <i class="fa-solid fa-trash inline"></i>
                             </button>
                         </form>
-                    @elseif(auth()->user()->isFollowing($post->owner))
+                    @endcan
+
+                    @cannot('update', $post)
+                    @if(auth()->user()->isFollowing($post->owner))
                         <a href="{{ route('unfollow', $post->owner->username) }}"
                             class="inline-flex items-center justify-center gap-2 rounded border border-neutral-300 px-4 py-2 text-sm font-semibold transition-colors hover:bg-neutral-50">
                             <i class="fa-solid fa-user-plus"></i>
@@ -45,6 +48,8 @@
                         {{ __('Follow') }}
                     </a>
                     @endif
+                    @endcannot
+
                 </div>
             </div>
             {{-- middle of right side --}}

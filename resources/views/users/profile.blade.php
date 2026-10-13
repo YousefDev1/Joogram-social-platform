@@ -18,9 +18,25 @@
                         {{ __('Edit profile') }}
                     </a>
                 </div>
-            @else
+            @elseif(auth()->user()->isFollowing($user))
                 <div>
-                    <a href="#"
+                    <a href="{{ route('unfollow', $user->username) }}"
+                        class="inline-flex items-center justify-center gap-2 rounded border border-neutral-300 px-4 py-2 text-sm font-semibold transition-colors hover:bg-neutral-50">
+                        <i class="fa-solid fa-user-plus"></i>
+                        {{ __('Unfollow') }}
+                    </a>
+                </div>
+            @elseif(auth()->user()->isPending($user))
+                <div>
+                    <a href="{{ route('unfollow', $user->username) }}"
+                        class="inline-flex items-center justify-center gap-2 rounded border border-neutral-300 px-4 py-2 text-sm font-semibold transition-colors hover:bg-neutral-50">
+                        <i class="fa-solid fa-user-plus"></i>
+                        {{ __('Follow') }}
+                    </a>
+                </div>
+                @else
+                    <div>
+                    <a href="{{ route('follow', $user->username) }}"
                         class="inline-flex items-center justify-center gap-2 rounded border border-neutral-300 px-4 py-2 text-sm font-semibold transition-colors hover:bg-neutral-50">
                         <i class="fa-solid fa-user-plus"></i>
                         {{ __('Follow') }}
@@ -53,17 +69,15 @@
                 </li>
                 <li class="flex flex-col md:flex-row text-center gap-2">
                     <div class="ltr:md:mr-1 rtl:md:ml-1 md:font-normal">
-                        {{-- static now edit it --}}
-                        4
+                        {{ $user->follower()->wherePivot('confirmed' , true)->get()->count() }}
                     </div>
                     <a href="" class="text-neutral-500 md:text-black">
-                        {{ __('Followers') }}
+                        {{$user->follower()->count() > 1 ? __('Followers') : __('Follower')}}
                     </a>
                 </li>
                 <li class="flex flex-col md:flex-row text-center gap-2">
                     <div class="ltr:md:mr-1 rtl:md:ml-1 md:font-normal">
-                        {{-- static now edit it --}}
-                        11
+                        {{ $user->following()->wherePivot('confirmed' , true)->get()->count() }}
                     </div>
                     <a href="" class="text-neutral-500 md:text-black">
                         {{ __('Following') }}

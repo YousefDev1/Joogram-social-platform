@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 #[Fillable([
     'name',
@@ -67,6 +68,39 @@ class User extends Authenticatable
 
     public function suggestedUsers()
     {
-        return User::whereNot('id', auth()->id())->get()->shuffle()->take(5);
+        $user = Auth::user();
+
+        return User::where('id', '!=', $user->id)
+        ->whereNotIn('id' , $user->following()->pluck('users.id'))
+        ->inRandomOrder()
+        ->limit(5)
+        ->get();
+    }
+
+    public function follow(User $user)
+    {
+        if ($this->id == $user->id) {
+            return;
+        }
+        if ($user->private_account) {
+            $this->following()->attach($user, ['confirmed' => false]);
+        }
+        else 
+        {
+            $this->following()->attach($user, ['confirmed' => true]);
+        }
+    }
+    public function unfollow(User $user)
+    {
+        return $this->following()->detach($user->id);
+    }
+
+    public function isFollowing(User $user)
+    {
+        return $this->following()->where('following_user_id',$user->id)->where('confirmed',true)->exists();
+    }
+    public function isPending(User $user)
+    {
+        return $this->following()->where('following_user_id',$user->id)->where('confirmed',false)->exists();
     }
 }

@@ -26,6 +26,24 @@
                                 <i class="fa-solid fa-trash inline"></i>
                             </button>
                         </form>
+                    @elseif(auth()->user()->isFollowing($post->owner))
+                        <a href="{{ route('unfollow', $post->owner->username) }}"
+                            class="inline-flex items-center justify-center gap-2 rounded border border-neutral-300 px-4 py-2 text-sm font-semibold transition-colors hover:bg-neutral-50">
+                            <i class="fa-solid fa-user-plus"></i>
+                            {{ __('Unfollow') }}
+                        </a>
+                        @elseif(auth()->user()->isPending($post->owner))
+                        <a class="inline-flex items-center justify-center gap-2 rounded border border-neutral-300
+                        px-4 py-2 text-sm font-semibold transition-colors hover:bg-neutral-50">
+                            <i class="fa-solid fa-user-plus"></i>
+                            {{ __('Pending') }}
+                        </a>
+                        @else
+                        <a href="{{ route('follow', $post->owner->username) }}"
+                        class="inline-flex items-center justify-center gap-2 rounded border border-neutral-300 px-4 py-2 text-sm font-semibold transition-colors hover:bg-neutral-50">
+                        <i class="fa-solid fa-user-plus"></i>
+                        {{ __('Follow') }}
+                    </a>
                     @endif
                 </div>
             </div>
@@ -53,7 +71,8 @@
                             alt="user image" class="w-10 h-10 rounded-full ltr:mr-5 rtl:mr-5">
                         <div class="flex flex-col">
                             <div>
-                                <a href="{{ route('users.profile', $comment->owner->username) }}" class="font-bold mr-2 inline-block">
+                                <a href="{{ route('users.profile', $comment->owner->username) }}"
+                                    class="font-bold mr-2 inline-block">
                                     {{$comment->owner->username}}</a>
                                 <span class="inline">{{$comment->body}}</span>
                             </div>
@@ -66,7 +85,8 @@
             </div>
             <div class="border-t p-3 flex flex-row">
                 <a href="/posts/{{ $post->slug }}/like">
-                    <i class="fa-solid fa-heart hover:text-gray-400 cursor-pointer mr-3 {{ $post->liked(auth()->user()) ? 'text-red-700' : '' }}"></i>
+                    <i
+                        class="fa-solid fa-heart hover:text-gray-400 cursor-pointer mr-3 {{ $post->liked(auth()->user()) ? 'text-red-700' : '' }}"></i>
                 </a>
                 <a onclick="focusOnComment()">
                     <i class="fa-solid fa-comment hover:text-gray-400 cursor-pointer mr-3"></i>
@@ -109,8 +129,8 @@
             }
         })
     }
-    function focusOnComment(){
+    function focusOnComment() {
         let commentBody = document.getElementById('comment_body').focus();
     }
-    
+
 </script>

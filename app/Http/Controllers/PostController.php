@@ -15,11 +15,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $usersIds = auth()->user()->following()->wherePivot('confirmed' , true)->pluck('users.id')->push(Auth::id());
-        $posts = Post::whereIn('user_id',$usersIds)->latest()->get();
+        $usersIds = auth()->user()->following()->wherePivot('confirmed', true)->pluck('users.id')->push(Auth::id());
+        $posts = Post::whereIn('user_id', $usersIds)->latest()->get();
         $suggestedUsers = auth()->user()->suggestedUsers();
 
-        return view('posts.index',['posts' => $posts , 'suggestedUsers' => $suggestedUsers ]);
+        return view('posts.index', ['posts' => $posts, 'suggestedUsers' => $suggestedUsers]);
     }
 
     /**
@@ -37,14 +37,14 @@ class PostController extends Controller
     {
         $data = $request->validate([
             'description' => ['required'],
-            'image' => ['required','mimes:jpg,jpeg,png,gif']
+            'image' => ['required', 'mimes:jpg,jpeg,png,gif']
         ]);
         $data['description'] = $request->description;
-        $data['image'] =$request['image']->store('posts','public');
+        $data['image'] = $request['image']->store('posts', 'public');
         $data['user_id'] = Auth::user()->id;
-        $data['slug'] = Str::random(10);    
-            Post::create($data);
-            return redirect()->back();
+        $data['slug'] = Str::random(10);
+        Post::create($data);
+        return redirect()->back();
     }
 
     /**
@@ -52,7 +52,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('posts.show',compact('post'));
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -60,7 +60,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.edit',compact('post'));
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -68,20 +68,20 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $this->authorize('update',$post);
-
+        $this->authorize('update', $post);
         $data = $request->validate([
-            'description' => ['required'],
-            'image' => ['nullable','mimes:jpg,jpeg,png,gif']
+            'description' => ['required', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,gif', 'max:2048'],
         ]);
-
-        if($request->hasFile('image'))
+        if ($request->hasFile('image'))
         {
-            $image = $request->file('image')->store('posts','public');
-            $request['image'] = $image;
+            $data['image'] = $request->file('image')->store('posts', 'public');
         }
         $post->update($data);
-        return redirect()->back()->with('success','post updated successfully');
+        return redirect()->back()->with(
+            'success',
+            'Post updated successfully'
+        );
     }
 
     /**
@@ -89,19 +89,18 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        $this->authorize('delete',$post);
-        if($post->image){
+        $this->authorize('delete', $post);
+        if ($post->image) {
             Storage::disk('public')->delete($post->image);
         }
         $post->delete();
-        return redirect()->route('users.profile',auth()->user()->username);
+        return redirect()->route('users.profile', auth()->user()->username);
     }
 
     public function explore()
     {
         // filtering the posts (don't get private accounts posts or current account posts)
-        $posts = Post::whereRelation('owner','private_account','=',0)->whereNot('user_id',auth()->id())->simplePaginate(12);
-        return view('posts.explore' ,['posts' => $posts]);
-
+        $posts = Post::whereRelation('owner', 'private_account', '=', 0)->whereNot('user_id', auth()->id())->simplePaginate(12);
+        return view('posts.explore', ['posts' => $posts]);
     }
 }
